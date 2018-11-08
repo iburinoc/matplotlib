@@ -1973,6 +1973,7 @@ class Annotation(Text, _AnnotationBase):
                  textcoords=None,
                  arrowprops=None,
                  annotation_clip=None,
+                 parent=None,
                  **kwargs):
         """
         Annotate the point *xy* with text *s*.
@@ -1991,9 +1992,12 @@ class Annotation(Text, _AnnotationBase):
         xy : (float, float)
             The point *(x,y)* to annotate.
 
-        xytext : (float, float), optional
+        xytext : (float, float) or 'best', optional
             The position *(x,y)* to place the text at.
             If *None*, defaults to *xy*.
+            If 'best', a variety of locations will be checked to determine
+            which location intersects the fewest objects of the containing
+            figure.
 
         xycoords : str, `.Artist`, `.Transform`, callable or tuple, optional
 
@@ -2139,6 +2143,10 @@ class Annotation(Text, _AnnotationBase):
         :ref:`plotting-guide-annotation`.
 
         """
+        # local import only to avoid circularity
+        from matplotlib.axes import Axes
+        from matplotlib.figure import Figure
+
         _AnnotationBase.__init__(self,
                                  xy,
                                  xycoords=xycoords,
@@ -2159,7 +2167,13 @@ class Annotation(Text, _AnnotationBase):
         # cleanup xytext defaults
         if xytext is None:
             xytext = self.xy
-        x, y = xytext
+        elif xytext == 'best':
+            # find the best position for this text
+            import pdb; pdb.set_trace()
+
+        x, y = self.xy
+        if not isinstance(xytext, str):
+            x, y = xytext
 
         Text.__init__(self, x, y, s, **kwargs)
 
@@ -2397,6 +2411,11 @@ class Annotation(Text, _AnnotationBase):
             bboxes.append(self.arrow_patch.get_window_extent())
 
         return Bbox.union(bboxes)
+
+    def _set_to_best_position(self):
+        if self.figure is None:
+            return
+        self.set_position((0, 0))
 
     arrow = property(
         fget=cbook.deprecated("3.0", message="arrow was deprecated in "

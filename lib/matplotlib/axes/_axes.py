@@ -721,11 +721,16 @@ class Axes(_AxesBase):
 
     @docstring.dedent_interpd
     def annotate(self, s, xy, *args, **kwargs):
+        xytext = kwargs.get('xytext')
+        if xytext == 'best':
+            kwargs['xytext'] = xy
         a = mtext.Annotation(s, xy, *args, **kwargs)
         a.set_transform(mtransforms.IdentityTransform())
         if 'clip_on' in kwargs:
             a.set_clip_path(self.patch)
         self._add_text(a)
+        if xytext == 'best':
+            a._set_to_best_position()
         return a
     annotate.__doc__ = mtext.Annotation.__init__.__doc__
     #### Lines and spans

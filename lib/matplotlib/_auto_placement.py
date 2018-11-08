@@ -9,7 +9,7 @@ from matplotlib.lines import Line2D
 from matplotlib.patches import Patch, Rectangle
 from matplotlib.transforms import Bbox
 
-def find_best_position(ax, width, height, renderer, consider):
+def find_best_position(ax, width, height, consider):
     """
     Determine the best location to place the object.
 

@@ -578,3 +578,9 @@ def test_large_subscript_title():
     tt.set_position((x, 1.01))
     ax.set_title('Old Way', loc='left')
     ax.set_xticklabels('')
+
+@image_comparison(baseline_images=['annotation_best_location'],
+                  extensions=['png'], style='mpl20')
+def test_annotation_best_location():
+    fig, ax = plt.subplots(1, 1)
+    an = ax.annotate('annotation', xy=(0.5, 0.5), xytext='best')
