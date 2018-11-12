@@ -1066,7 +1066,8 @@ class Legend(Artist):
                                                 renderer)
                         for x in range(1, len(self.codes))]
 
-        return find_best_position(self.parent, width, height, renderer, consider)
+        return find_best_position(
+            self.parent, width, height, renderer, consider)
 
     def contains(self, event):
         return self.legendPatch.contains(event)
