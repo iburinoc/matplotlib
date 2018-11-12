@@ -2423,14 +2423,15 @@ class Annotation(Text, _AnnotationBase):
         fontsize = renderer.points_to_pixels(self.get_size())
         container = parent_bbox.padded(-0.5 * fontsize)
 
-        # use the same checking order as legend for determinism
+        # use a consistent checking order instead of map key iteration for
+        # determinism
         coefs = ["NE", "NW", "SW", "SE", "E", "W", "E", "S", "N", "C"]
         consider_bboxes = [bbox.anchored(c, container=container)
                 for c in coefs]
         consider = [(b.x0, b.y0) for b in consider_bboxes]
         pos = find_best_position(self.axes, bbox.width, bbox.height, consider)
         self.set_position(pos)
-        self.anncoords = "axes pixels"
+        self.anncoords = "figure pixels"
 
     def _get_bbox_to_anchor(self):
         return self.axes.bbox if self.axes is not None else None
